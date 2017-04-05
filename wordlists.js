@@ -145,6 +145,7 @@ function numbersToTonemarks (pinyin) {
 	intermediatePinyin = intermediatePinyin.replace(/i1/g, "ī");
 	intermediatePinyin = intermediatePinyin.replace(/o1/g, "ō");
 	intermediatePinyin = intermediatePinyin.replace(/ü1/g, "ǖ");
+	intermediatePinyin = intermediatePinyin.replace(/v1/g, "ǖ");
 	//intermediatePinyin = intermediatePinyin.replace(/1/g, "\\-^");
 	
 	// Tone 2
@@ -154,6 +155,7 @@ function numbersToTonemarks (pinyin) {
 	intermediatePinyin = intermediatePinyin.replace(/i2/g, "í");
 	intermediatePinyin = intermediatePinyin.replace(/o2/g, "ó");
 	intermediatePinyin = intermediatePinyin.replace(/ü2/g, "ǘ");
+	intermediatePinyin = intermediatePinyin.replace(/v2/g, "ǘ");
 	intermediatePinyin = intermediatePinyin.replace(/([iaeou])2/g, "$1'");
 	
 	// Tone 3
@@ -163,6 +165,7 @@ function numbersToTonemarks (pinyin) {
 	intermediatePinyin = intermediatePinyin.replace(/i3/g, "ǐ");
 	intermediatePinyin = intermediatePinyin.replace(/o3/g, "ǒ");
 	intermediatePinyin = intermediatePinyin.replace(/ü3/g, "ǚ");
+	intermediatePinyin = intermediatePinyin.replace(/v3/g, "ǚ");
 
 	// Tone 4
 	intermediatePinyin = intermediatePinyin.replace(/a4/g, "à");
@@ -171,6 +174,7 @@ function numbersToTonemarks (pinyin) {
 	intermediatePinyin = intermediatePinyin.replace(/i4/g, "ì");
 	intermediatePinyin = intermediatePinyin.replace(/o4/g, "ò");
 	intermediatePinyin = intermediatePinyin.replace(/ü4/g, "ǜ");
+	intermediatePinyin = intermediatePinyin.replace(/v4/g, "ǜ");
 	intermediatePinyin = intermediatePinyin.replace(/([iaeou])4/g, "$1`");
 	
 	// Tone 0
