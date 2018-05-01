@@ -363,6 +363,47 @@ function autocorrelationPeakPicker (autocorr, sampleRate, fMin, fMax) {
 	return peaks;
 };
 
+// Return pitch array
+// For conversion to PitchTier, supply "candidates" in a list
+function get_Pitch (sound, sampleRate, fMin, fMax, dT) {
+	var duration = sound.length / sampleRate;
+	var pitchArray = [];
+	
+	// Set up window and calculate Autocorrelation of window
+	var windowDuration = (fMin > 0) ? 1/fMin : 1/60;
+	windowDuration *= 6;
+	var window = setupGaussWindow (sampleRate, fMin);
+	var windowRMS = getWindowRMS (window);
+
+	/* Create a new pitch detector */
+	var pitch = new PitchAnalyzer(sampleRate);
+	
+	// Step through the sound
+	for (var t = 0; t < duration; t += dT) {
+		var startSample = (sampleRate * (t + dT) - window.length)/2;
+		var endSample = startSample + window.length;
+		var audioBuffer = sound.slice(startSample, endSample);
+		//Window
+		for(var i=0; i<audioBuffer.length; audioBuffer[i] = audioBuffer[i] * window[i], i++);
+		
+		/* Copy samples to the internal buffer */
+		pitch.input(audioBuffer);
+		/* Process the current input in the internal buffer */
+		pitch.process();
+		
+		// Find the pitch candidates
+		var tone = pitch.findTone();
+		var pitchCandidates = [];
+		if (tone === null) {
+			pitchCandidates.push({x: 0, y: 0});
+		} else {
+			pitchCandidates.push({x: tone.freq, y: 1});
+		}
+		pitchArray.push({x: t, values: pitchCandidates});
+	};
+	return pitchArray;
+};
+
 // Return a list of points with {t, candidates} "pairs"
 function calculate_Pitch (sound, sampleRate, fMin, fMax, dT) {
 	var duration = sound.length / sampleRate;
@@ -387,7 +428,7 @@ function calculate_Pitch (sound, sampleRate, fMin, fMax, dT) {
 		// Find the pitch candidates
 		var pitchCandidates = autocorrelationPeakPicker (autocorr, sampleRate, fMin, fMax);
 		// unvoiced
-		if(pitchCandidates.length == 0)pitchCandidates.push({x:0, y:0});
+		if(pitchCandidates.length == 0)pitchCandidates.push({x: 0, y: 0});
 		pitchArray.push({x: t, values: pitchCandidates});
 	};
 	return pitchArray;
