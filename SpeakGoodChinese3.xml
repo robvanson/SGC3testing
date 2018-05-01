@@ -57,6 +57,7 @@ button {
 <script type="text/javascript" src="mespeak/mespeak.full.js" defer="true" ></script>
 <script type="text/javascript" src="fft.js/lib/real.js" defer="true" ></script>
 <script type="text/javascript" src="fft.js/lib/complex.js" defer="true" ></script>
+<script type="text/javascript" src="pitch.js/src/pitch.js" defer="true" ></script>
 </head>
 
 <body onload="if(window.speechSynthesis)window.speechSynthesis.getVoices();localStorage.sgc3_saveAudio = JSON.stringify(false);" onfocus="load_SGC3_settings ();" onblur="store_SGC3_settings ();" onunload="sgc3_settings.saveAudio = false; store_SGC3_settings (); if(settingsWindow)settingsWindow.close(); if(selectWordsWindow)selectWordsWindow.close();" contextmenu="mymenu" >
