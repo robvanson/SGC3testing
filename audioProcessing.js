@@ -54,7 +54,10 @@ var clearRecording = function () {
  */
  
 // Only initialize ONCE
-var audioContext = new AudioContext();
+// On Safari/iOS use: webkitAudioContext
+// webkitAudioContext must be "resume()"ed with a tap (Record/Play?)
+var AudioContextObject = window.AudioContext || window.webkitAudioContext;
+var audioContext = new AudioContextObject();
  
 // Decode the audio blob
 var audioProcessing_decodedArray;

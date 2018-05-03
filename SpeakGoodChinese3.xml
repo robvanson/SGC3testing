@@ -720,6 +720,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 		
 		// Play recorded sound
 		play.onclick = function() {
+			audioContext.resume();
 			play_soundArray (currentAudioWindow, recordedSampleRate, 0, 0);
 		};
 		
@@ -741,6 +742,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 		
 		// onClick Start
 		record.onclick = function() {
+			audioContext.resume();
 			clearRecordedData ();
 			recordRTC.startRecording();
 		    play.disabled = true;
