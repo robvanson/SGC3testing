@@ -65,7 +65,7 @@ function processAudio (blob) {
 	var audioReader = new FileReader();
 	audioReader.onload = function(){
 		var arrayBuffer = audioReader.result;
-		audioContext.decodeAudioData(arrayBuffer, decodedDone, function(e){ console.log("Error with decoding audio data" + e.err); });
+		audioContext.decodeAudioData(arrayBuffer, decodedDone, function(e){ console.log("Error with decoding audio data");if(e){console.log(e)}});
 	};
 	audioReader.readAsArrayBuffer(blob);
 };
