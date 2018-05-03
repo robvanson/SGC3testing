@@ -54,7 +54,10 @@ var clearRecording = function () {
  */
  
 // Only initialize ONCE
-var audioContext = new AudioContext();
+// On Safari/iOS use: webkitAudioContext
+// webkitAudioContext must be "resume()"ed with a tap (Record/Play?)
+var AudioContextObject = window.AudioContext || window.webkitAudioContext;
+var audioContext = new AudioContextObject();
  
 // Decode the audio blob
 var audioProcessing_decodedArray;
@@ -62,7 +65,7 @@ function processAudio (blob) {
 	var audioReader = new FileReader();
 	audioReader.onload = function(){
 		var arrayBuffer = audioReader.result;
-		audioContext.decodeAudioData(arrayBuffer, decodedDone);
+		audioContext.decodeAudioData(arrayBuffer, decodedDone, function(e){ console.log("Error with decoding audio data" + e.err); });
 	};
 	audioReader.readAsArrayBuffer(blob);
 };
@@ -363,6 +366,7 @@ function autocorrelationPeakPicker (autocorr, sampleRate, fMin, fMax) {
 	return peaks;
 };
 
+// Return pitch array
 // Return a list of points with {t, candidates} "pairs"
 function calculate_Pitch (sound, sampleRate, fMin, fMax, dT) {
 	var duration = sound.length / sampleRate;
@@ -387,7 +391,7 @@ function calculate_Pitch (sound, sampleRate, fMin, fMax, dT) {
 		// Find the pitch candidates
 		var pitchCandidates = autocorrelationPeakPicker (autocorr, sampleRate, fMin, fMax);
 		// unvoiced
-		if(pitchCandidates.length == 0)pitchCandidates.push({x:0, y:0});
+		if(pitchCandidates.length == 0)pitchCandidates.push({x: 0, y: 0});
 		pitchArray.push({x: t, values: pitchCandidates});
 	};
 	return pitchArray;
@@ -438,6 +442,58 @@ function Tier () {
 };
 
 // Pitch tracking and candidate selection
+function toPitchTierPitchJS (sound, sampleRate, fMin, fMax, dT) {
+	var duration = sampleRate > 0 ? sound.length / sampleRate : 0;
+	
+	
+	// Set up window and calculate Autocorrelation of window
+	var windowDuration = (fMin > 0) ? 1/fMin : 1/60;
+	windowDuration *= 2;
+	windowLength = sampleRate * windowDuration
+	
+	var pitchTier = new Tier();
+	pitchTier.xmin = 0;
+	pitchTier.dT = dT;
+
+	/* Create a new pitch detector */
+	var pitch = new PitchAnalyzer(sampleRate);
+	
+	// Step through the sound
+	for (var t = 0; t < duration; t += dT) {
+		var startSample = Math.floor(sampleRate * (t + dT - windowDuration)/2);
+		var endSample = startSample + windowLength;
+		var audioBuffer = new Float32Array(windowLength);
+		for(var i = 0; i < windowLength; ++i){
+			if(startSample + i < 0 || startSample + i >= sound.length){
+				audioBuffer[i] = 0;
+			} else {
+				audioBuffer[i] = sound [startSample + i];
+			};
+		};
+		
+		/* Copy samples to the internal buffer */
+		pitch.input(audioBuffer);
+		/* Process the current input in the internal buffer */
+		pitch.process();
+		
+		// Find the pitch candidates
+		var tone = pitch.findTone();
+		var pitchCandidates = [];
+		var F0 = 0;
+		if (tone === null) {
+			F0 = 0;
+		} else {
+			F0 = tone.freq;
+		};
+		pitchTier.pushItem ({x: t, value: F0});
+
+	console.log("toPitchTier: "+t+" - "+F0+" - "+windowDuration+" - "+audioBuffer.length);
+
+	};
+	
+	return pitchTier;
+}
+
 function toPitchTier (sound, sampleRate, fMin, fMax, dT) {
 	var pitchArray = calculate_Pitch (sound, sampleRate, fMin, fMax, dT);
 	var duration = sampleRate > 0 ? sound.length / sampleRate : 0;
