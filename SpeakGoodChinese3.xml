@@ -722,6 +722,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 		play.onclick = function() {
 			audioContext = new AudioContextObject();
 			play_soundArray (currentAudioWindow, recordedSampleRate, 0, 0);
+			audioContext.close();
 		};
 		
 		// Stop
@@ -738,6 +739,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 		    record.style.color = "red";
 		    play.style.color = "red";
 		    recordingLight.style.color = "gray";
+			audioContext.close();
 		}
 		
 		// onClick Start
