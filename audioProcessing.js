@@ -62,7 +62,6 @@ var audioContext = new AudioContextObject();
 // Decode the audio blob
 var audioProcessing_decodedArray;
 function processAudio (blob) {
-	if(blob === null){console.log("No audio blob to process");}
 	var audioReader = new FileReader();
 	audioReader.onload = function(){
 		audioContext.resume();	// Is this necessary for Safari?
@@ -77,6 +76,7 @@ function processAudio (blob) {
 sessionStorage["recorded"] = "false";
 var retrievedData = false;
 function decodedDone(decoded) {
+	if(! decoded){console.log("No decoded: "+decoded)};
 	var typedArray = new Float32Array(decoded.length);
 	typedArray = decoded.getChannelData(0);
 	var currentArray = typedArray;
