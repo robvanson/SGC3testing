@@ -720,8 +720,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 		
 		// Play recorded sound
 		play.onclick = function() {
-var AudioContextObject = window.AudioContext || window.webkitAudioContext;
-var audioContext = new AudioContextObject();
+			audioContext = new AudioContextObject();
 			play_soundArray (currentAudioWindow, recordedSampleRate, 0, 0);
 		};
 		
@@ -743,8 +742,7 @@ var audioContext = new AudioContextObject();
 		
 		// onClick Start
 		record.onclick = function() {
-var AudioContextObject = window.AudioContext || window.webkitAudioContext;
-var audioContext = new AudioContextObject();
+			audioContext = new AudioContextObject();
 			clearRecordedData ();
 			recordRTC.startRecording();
 		    play.disabled = true;
