@@ -742,8 +742,7 @@ http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 		
 		// onClick Start
 		record.onclick = function() {
-			audioContext.close();
-			audioContext = new AudioContextObject();
+			audioContext.resume();
 			clearRecordedData ();
 			recordRTC.startRecording();
 		    play.disabled = true;
